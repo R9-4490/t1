@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>kimo-chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#0a0a0a">
+</head>
+<body>
+    <div id="app">
+
+        <!-- ==================== شاشة المصادقة ==================== -->
+        <section id="auth-screen" class="screen active">
+            <div class="auth-container">
+                <div class="logo-auth">
+                    <h1>kimo-chat</h1>
+                    <p>دردشة اجتماعية عربية + قول مياو</p>
+                </div>
+
+                <!-- نموذج تسجيل الدخول -->
+                <form id="login-form" class="auth-form">
+                    <input type="email" id="login-email" placeholder="البريد الإلكتروني" required>
+                    <input type="password" id="login-password" placeholder="كلمة المرور" required>
+                    <button type="submit">تسجيل الدخول</button>
+                    <a href="#" id="forgot-password">نسيت كلمة المرور؟</a>
+                </form>
+
+                <!-- نموذج إنشاء حساب -->
+                <form id="register-form" class="auth-form hidden">
+                    <input type="text" id="reg-username" placeholder="اسم المستخدم (فريد)" required>
+                    <input type="text" id="reg-displayname" placeholder="الاسم المعروض" required>
+                    <input type="email" id="reg-email" placeholder="البريد الإلكتروني" required>
+                    <input type="password" id="reg-password" placeholder="كلمة المرور" required>
+                    <input type="password" id="reg-password-confirm" placeholder="تأكيد كلمة المرور" required>
+                    <button type="submit">إنشاء حساب</button>
+                </form>
+
+                <div class="auth-switch">
+                    <span id="switch-text">ليس لديك حساب؟</span>
+                    <button id="switch-btn">إنشاء حساب جديد</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== التطبيق الرئيسي ==================== -->
+        <section id="main-app" class="screen hidden">
+
+            <!-- شريط علوي -->
+            <header class="top-bar glass">
+                <div class="logo">kimo-قول مياو</div>
+                
+                <div class="search-container">
+                    <input type="text" id="global-search" placeholder="ابحث عن مستخدمين أو محادثات..." autocomplete="off">
+                </div>
+
+                <div class="top-icons">
+                    <button id="notifications-btn" class="icon-btn">🛎️</button>
+                    <button id="new-message-btn" class="icon-btn">✍️</button>
+                    <div id="header-profile" class="profile-pic-small"></div>
+                </div>
+            </header>
+
+            <!-- التنقل السفلي -->
+            <nav class="bottom-nav glass">
+                <button data-tab="stories" class="nav-item active">
+                    <span class="icon">📖</span>
+                    <span class="label">القصص</span>
+                </button>
+                <button data-tab="chats" class="nav-item">
+                    <span class="icon">💬</span>
+                    <span class="label">الدردشات</span>
+                </button>
+                <button data-tab="groups" class="nav-item">
+                    <span class="icon">👥</span>
+                    <span class="label">المجموعات</span>
+                </button>
+                <button data-tab="profile" class="nav-item">
+                    <span class="icon">👤</span>
+                    <span class="label">أنا</span>
+                </button>
+            </nav>
+
+            <!-- المحتوى المتغير -->
+            <main id="views-container">
+
+                <!-- 1. شاشة القصص -->
+                <div id="stories-view" class="view active">
+                    <div class="stories-bar">
+                        <!-- القصة الخاصة بالمستخدم -->
+                        <div class="story-circle own" id="my-story">
+                            <div class="circle">
+                                <span class="plus">+</span>
+                            </div>
+                            <span class="username">قصتك</span>
+                        </div>
+                        <!-- باقي القصص يتم ملؤها بالجافاسكريبت -->
+                    </div>
+                </div>
+
+                <!-- 2. شاشة الدردشات -->
+                <div id="chats-view" class="view hidden">
+                    <div id="chats-list" class="chats-list">
+                        <!-- يتم ملؤها بالجافاسكريبت -->
+                    </div>
+                </div>
+
+                <!-- 3. شاشة المجموعات -->
+                <div id="groups-view" class="view hidden">
+                    <div id="groups-list" class="chats-list">
+                        <!-- يتم ملؤها بالجافاسكريبت -->
+                    </div>
+                </div>
+
+                <!-- 4. شاشة الملف الشخصي -->
+                <div id="profile-view" class="view hidden">
+                    <div class="profile-header">
+                        <div class="cover-photo" id="profile-cover"></div>
+                        <div class="profile-pic-large" id="profile-pic"></div>
+                        <h2 id="profile-displayname"></h2>
+                        <p id="profile-username"></p>
+                        <p id="profile-bio" class="bio"></p>
+                        
+                        <div class="profile-stats">
+                            <div>
+                                <span id="followers-count">0</span>
+                                <span>متابع</span>
+                            </div>
+                            <div>
+                                <span id="following-count">0</span>
+                                <span>يتابع</span>
+                            </div>
+                            <div>
+                                <span id="stories-count">0</span>
+                                <span>قصة</span>
+                            </div>
+                        </div>
+
+                        <button id="edit-profile-btn" class="btn-secondary">تعديل الملف</button>
+                    </div>
+                </div>
+
+                <!-- نافذة الدردشة (تظهر فوق كل شيء) -->
+                <div id="chat-window" class="chat-window hidden">
+                    <div class="chat-header glass">
+                        <button id="chat-back-btn" class="back-btn">←</button>
+                        <div class="chat-user">
+                            <img id="chat-user-pic" class="chat-pic" src="" alt="">
+                            <div>
+                                <span id="chat-username" class="chat-name"></span>
+                                <span id="chat-status" class="chat-status">متصل الآن</span>
+                            </div>
+                        </div>
+                        <button class="icon-btn">⋯</button>
+                    </div>
+
+                    <div id="messages-container" class="messages-container">
+                        <div id="messages-list" class="messages-list">
+                            <!-- الرسائل تظهر هنا -->
+                        </div>
+                    </div>
+
+                    <div class="chat-input glass">
+                        <button id="attach-media" class="input-icon">📎</button>
+                        <textarea id="message-input" placeholder="اكتب رسالة..." rows="1"></textarea>
+                        <button id="send-message-btn" class="send-btn">➤</button>
+                        <button id="voice-message-btn" class="input-icon">🎙️</button>
+                    </div>
+                </div>
+            </main>
+        </section>
+
+        <!-- Modals -->
+        <div id="modal-overlay" class="modal-overlay hidden"></div>
+
+        <!-- قصة كاملة -->
+        <div id="story-viewer" class="story-viewer hidden">
+            <!-- يتم التحكم بها بالجافاسكريبت -->
+        </div>
+
+    </div>
+
+    <!-- السكريبتات -->
+    <script type="module" src="firebaseConfig.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
